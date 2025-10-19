@@ -112,6 +112,27 @@ Delete
 
 ---------------------------------------------------------------------------
 
+update-insert
+
+
+<root>
+  <UPDATE_INSERT_statement>
+    <dbTableName action="UPDATE_INSERT">
+      <table>person</table>
+      <access>
+        <fname>test227</fname>
+        <lname>test@gmail.com</lname>
+      </access>
+      <key>
+        <fname>stak</fname>
+      </key>
+    </dbTableName>
+  </UPDATE_INSERT_statement>
+</root>
+
+----------------------------------------------------------------------------------------
+Combination of post,update,delete
+
 <root>
     <Insert_Statement1>
         <dbTableName action="INSERT">
@@ -148,7 +169,8 @@ Delete
         </dbTableName>
     </Delete_Statement3>
 </root>
- 
+------------------------------------------------------------------------------------
+
 
 
 
