@@ -1,0 +1,154 @@
+BATCH PAYLOAD MULTIPLE INSERT
+
+reference:https://help.sap.com/docs/cloud-integration/sap-cloud-integration/batch-payload-and-operation?locale=en-US
+
+
+
+BATCH GROOVY SCRIPT
+
+import com.sap.gateway.ip.core.customdev.util.Message;
+import java.util.HashMap;
+import java.util.Arrays;
+
+//Insert script
+def Message processData(Message message) {
+
+    //Headers
+    List paramList = new ArrayList();
+    paramList.add(Arrays.asList(108, 'test', 2021-01-01,1,1,'test@gmail.com'));
+    paramList.add(Arrays.asList(107, 'test', 2021-01-01,1,1,'test@gmail.com'));
+    paramList.add(Arrays.asList(112, 'test112', 2021-01-01,1,1,'test@gmail.com'));
+    paramList.add(Arrays.asList(106, 'test106', 2021-01-01,1,1,'test@gmail.com'));
+    message.setHeader("CamelSqlParameters",paramList);
+
+    //Body
+    message.setBody("INSERT INTO testjdbcsample (emp_id,emp_name,join_date,a1,a2,email) VALUES(?,?,?,?,?,?)");
+    return message;
+}
+
+
+
+-------------------------------------------------------------------------------
+
+Post 
+
+
+<root>
+	<insert_statement1>
+		<dbTableName action="INSERT">
+			<table>person</table>
+			<access>
+				
+				<fname hasQuot="Yes">usha</fname>
+				<lname hasQuot="Yes">moorthy</lname>
+                                <city hasQuot="Yes">arcot</city>
+
+			</access>
+		</dbTableName>
+	</insert_statement1>
+	<insert_statement2>
+				<dbTableName action="INSERT">
+			<table>person</table>
+			<access>
+				
+				<fname hasQuot="Yes">sudhish</fname>
+				<lname hasQuot="Yes">ganesh</lname>
+                                <city hasQuot="Yes">arcot</city>
+
+			</access>
+		</dbTableName>
+	</insert_statement2>
+</root>
+
+
+
+---------------------------------------------------------------------------------------------------------------------
+
+Update:
+
+<root>
+    <StatementName>
+        <dbTableName action="UPDATE">
+            <table>person</table>
+            <access>
+                <col1>val1</col1>
+                <col2>val2new</col2>
+            </access>
+            <key1>
+                <col2>val2old</col2>
+                <col4>val4</col4>
+            </key1>
+            <key2>
+                <col2>val2old2</col2>
+            </key2>
+        </dbTableName>
+    </StatementName>
+</root>
+
+
+
+
+UPDATE dbTableName  SET col1='val1', col2='val2new' WHERE ((col2='val2old' AND col4='val4') OR (col2='val2old2'))
+
+
+UPDATE Customers SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+WHERE CustomerID = 1;
+
+
+-----------------------------------------------------------------------------------------------------------------------
+Delete 
+
+
+<root>
+<Delete_Statement3>
+        <dbTableName action="DELETE">
+            <table>person</table>
+            <key>
+                <fname>madhavan</fname>
+            </key>
+        </dbTableName>
+    </Delete_Statement3>
+</root>
+
+---------------------------------------------------------------------------
+
+<root>
+    <Insert_Statement1>
+        <dbTableName action="INSERT">
+            <table>person</table>
+            <access>
+                <fname>ajay</fname>
+                <lname>stark</lname>
+                <city>Ranipet</city>
+            </access>
+            <access>
+               <fname>mohana</fname>
+                <lname>priya</lname>
+                <city>Ranipet</city>
+            </access>
+        </dbTableName>
+    </Insert_Statement1>
+    <Update_Statement2>
+        <dbTableName action="UPDATE">
+            <table>person</table>
+            <access>
+                <city>Ranipet</city>
+            </access>
+            <key>
+                <fname>sudhish</fname>
+            </key>
+        </dbTableName>
+    </Update_Statement2>
+    <Delete_Statement3>
+        <dbTableName action="DELETE">
+            <table>person</table>
+            <key>
+                <fname>dummy</fname>
+            </key>
+        </dbTableName>
+    </Delete_Statement3>
+</root>
+ 
+
+
+

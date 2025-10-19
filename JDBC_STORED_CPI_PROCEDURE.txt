@@ -1,0 +1,48 @@
+CREATE OR REPLACE PROCEDURE GP
+   
+    LANGUAGE SQLSCRIPT
+    SQL SECURITY INVOKER
+    READS SQL DATA
+AS
+BEGIN
+        SELECT * from PERSON;
+END;
+
+CPI PAYLOAD:
+
+<root>
+	<StatementName>
+		<storedProcedureName action="EXECUTE">
+			<table>GP</table>		
+		</storedProcedureName >
+	</StatementName>
+</root>
+
+------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE GETPERSONFNAME
+    ( IN firstname nvarchar(100))
+    LANGUAGE SQLSCRIPT
+    SQL SECURITY INVOKER
+    READS SQL DATA
+AS
+BEGIN
+        SELECT * from PERSON where fname = firstname;
+END;
+
+CPI PAYLOAD:
+
+<root>
+	<StatementName>
+		<storedProcedureName action="EXECUTE">
+			<table>GETPERSONFNAME</table>
+	               <param1 isInput="true" type="VARCHAR">ajay</param1>
+		</storedProcedureName >
+	</StatementName>
+</root>
+
+
+----------------------------------------------------------------------------------
+
+
+
