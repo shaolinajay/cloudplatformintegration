@@ -7,39 +7,38 @@ import com.sap.gateway.ip.core.customdev.util.Message;
 import groovy.json.*;
 def Message processData(Message message) {
 
-    /*To set or modify the body, you can use the following methods.
-    def body = message.getBody();
-    message.setBody(body + " Body is modified");
-
-    //To set or modify the headers, you can use the following methods.
-    def headers = message.getHeaders();
-    def value = headers.get("oldHeader");
-    message.setHeader("oldHeader", value + " modified");
-    message.setHeader("newHeader", "newHeader");
-
-    //To set or modify the properties, you can use the following methods.*/
     message.setHeader("Content-Type", "multipart/mixed;boundary=batch");
     message.setHeader("Accept", "multipart/mixed");
     def headers = message.getHeaders();
     def cookies = headers.get("set-cookie");
     def properties = message.getProperties();
-    InputStream payload = properties.get('body') as InputStream
+    
     message.setHeader("cookie",String.join(";",cookies));
     def Entity = properties.get("Entity");
-    def body = payload.getText("UTF-8")
-    def BatchPayload="--batch\r\nContent-Type: multipart/mixed;boundary=changeset_001\r\n\r\n"
-    def json = new JsonSlurper().parseText(body);
+    def body = message.getBody(java.io.Reader)
+    def sb = new StringBuilder(10_000_000)
+    sb.append("--batch\r\n")
+    sb.append("Content-Type: multipart/mixed; boundary=changeset_001\r\n\r\n")
+  
+    
+    def json = new JsonSlurper().parse(body);
     def rows = json.Root.row  // List<Map>
     def i=1
     rows.each { r ->
-    def compact = JsonOutput.prettyPrint(JsonOutput.toJson(r))
-    BatchPayload = BatchPayload+"--changeset_001\r\nContent-Type: application/http\r\nContent-Transfer-Encoding: binary\r\nContent-ID: ${i}\r\n\r\nPOST ${Entity} HTTP/1.1\r\nContent-Type: application/json;odata.metadata=minimal\r\n\r\n${compact}\r\n\r\n"
-    i++;
-
+    sb.append("--changeset_001\r\n")
+    sb.append("Content-Type: application/http\r\n")
+    sb.append("Content-Transfer-Encoding: binary\r\n")
+    sb.append("Content-ID: ").append(i++).append("\r\n\r\n")
+    sb.append("POST ").append(Entity).append(" HTTP/1.1\r\n")
+    sb.append("Content-Type: application/json;odata.metadata=minimal\r\n\r\n")
+    sb.append(JsonOutput.toJson(r)).append("\r\n\r\n")
     }
-    BatchPayload+= "--changeset_001--\r\n\r\n--batch--"
-    message.setBody(BatchPayload)
+    sb.append("--changeset_001--\r\n\r\n")
+    sb.append("--batch--")
+    message.setBody(sb.toString())
+  
 
     return message;
 }
+
 
