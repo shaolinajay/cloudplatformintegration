@@ -1,0 +1,85 @@
+Build the MIME email (with PDF)
+
+
+
+
+From: "Shaolin Ajay" <shaolinajay333@gmail.com>
+To: shaolinajay123@gmail.com
+Subject: PDF attachment test
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="boundary123"
+
+--boundary123
+Content-Type: text/plain; charset="UTF-8"
+
+Hi Ajay,
+
+Please find the PDF attached.
+
+Regards,
+Shaolin Ajay
+
+--boundary123
+Content-Type: application/pdf; name="test.pdf"
+Content-Disposition: attachment; filename="test.pdf"
+Content-Transfer-Encoding: base64
+
+PASTE_BASE64_OF_PDF_HERE
+
+--boundary123--
+
+
+
+
+
+Base64URL encode the ENTIRE MIME message
+
+Take everything above and encode it again.
+
+Then make it URL-safe:
+
++ → -
+
+/ → _
+
+Remove all =
+
+This final string goes into Gmail API.
+
+
+{
+  "raw": "The final BASE64URL_ENCODED_MIME_MESSAGE"
+}
+
+
+Option for convertpdf into encode64 after use in the abouve --boundary123 content here no need to remove anything: Windows built-in (CERTUTIL) ⭐ RECOMMENDED
+
+This works on all Windows machines.
+
+Steps
+
+Open Command Prompt
+
+Go to folder where PDF exists:
+
+cd C:\path\to\your\pdf
+certutil -encode test.pdf test_base64.txt
+Open test_base64.txt
+
+Copy only the Base64 text
+
+Remove:
+
+-----BEGIN CERTIFICATE-----
+-----END CERTIFICATE-----
+
+Common mistake
+
+❌ Using Base64 of PDF directly in Gmail API
+✔ You must Base64URL encode the entire email, not just the PDF
+The REAL rule (important)
+
+Gmail API want
+
+"raw": "ONE-LINE-BASE64URL-STRING"
+
