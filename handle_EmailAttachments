@@ -1,0 +1,56 @@
+import com.sap.gateway.ip.core.customdev.util.Message
+import javax.activation.DataHandler
+
+def Message processData(Message message) {
+
+    // copy attachments
+    Map<String, DataHandler> attachments =
+            new HashMap<>(message.getAttachments())
+
+    if (!attachments.isEmpty()) {
+
+        // store copy in property
+        message.setProperty("Attachments", attachments)
+        message.setProperty("Size", attachments.size())
+
+        // ✅ THIS is the ONLY supported way to clear attachments
+        message.setAttachments([:])
+    }
+
+    return message
+}
+
+
+
+
+
+
+import com.sap.gateway.ip.core.customdev.util.Message
+import javax.activation.DataHandler
+
+def Message processData(Message message) {
+
+    Map<String, DataHandler> attachments =
+            message.getProperty("Attachments")
+
+    if (attachments != null && !attachments.isEmpty()) {
+
+        // get first attachment name
+        def nextKey = attachments.keySet().iterator().next()
+
+        // remove returns DataHandler
+        DataHandler attachment = attachments.remove(nextKey)
+
+        // update body
+        if (attachment != null) {
+            message.setBody(attachment.getContent())
+        }
+
+        // 🔥 IMPORTANT: set back to message
+        message.setProperty("Attachments", attachments)
+
+        message.setProperty("Size", attachments.size())
+    }
+
+    return message
+}
