@@ -1,0 +1,64 @@
+<xsl:choose>
+<xsl:when test="$nodes_in/*='0002'">
+<xsl:sequence select="'AAI'"/>
+</xsl:when>
+<xsl:when test="$nodes_in/*='0003'">
+<xsl:sequence select="'ACB'"/>
+</xsl:when>
+<xsl:when test="$nodes_in/*='0102'">
+<xsl:sequence select="'TDT'"/>
+</xsl:when>
+<xsl:when test="$nodes_in/*='Z002'">
+<xsl:sequence select="'HAN'"/>
+</xsl:when>
+<xsl:when test="$nodes_in/*='Z009'">
+<xsl:sequence select="'DEL'"/>
+</xsl:when>
+<xsl:when test="$nodes_in/*='Z016'">
+<xsl:sequence select="'INV'"/>
+</xsl:when>
+</xsl:choose>
+
+$nodes_in/* !='' and not(matches(normalize-space($nodes_in/*),'^0+(\.0+)?$'))
+
+$nodes_in/* !='' and not(matches(normalize-space(string-join($nodes_in/*, '')), '^0+(\.0+)?$'))
+
+$nodes_in/* !='' and not(matches(substring(normalize-space(string-join($nodes_in/*, '')), 1, 70), '^0+(\.0+)?$'))
+
+
+
+$nodes_in/QUALF = '007' and ($nodes_in[QUALF='007']/NTANF!='' and $nodes_in[QUALF='007']/NTANZ!='' ) and not(matches(string-join($nodes_in[QUALF='007']/NTANF,' '),'^\s*0+(\.0+)?\s*$'))
+
+let $sub := substring(normalize-space(string-join($nodes_in/*, '')), 71, 70)
+return $sub != '' and not(matches($sub, '^\s*0+(\.0+)?\s*$'))
+
+
+<xsl:variable name="tdid">
+<xsl:choose>
+<xsl:when test="$nodes_in/TDID='0002'">Header note 1 </xsl:when>
+<xsl:when test="$nodes_in/TDID='0003'">Header note 2 </xsl:when>
+<xsl:when test="$nodes_in/TDID='0102'">Transport information </xsl:when>
+<xsl:when test="$nodes_in/TDID='Z002'">Shipping Mark </xsl:when>
+<xsl:when test="$nodes_in/TDID='Z009'">Delivery condition </xsl:when>
+<xsl:when test="$nodes_in/TDID='Z016'">Invoice to go with goods [Y/N] </xsl:when>
+<xsl:otherwise></xsl:otherwise>
+</xsl:choose>
+</xsl:variable>
+
+<!-- string-join merges the list with a space (or any separator) -->
+<xsl:variable name="full_text" select="concat($tdid, string-join($nodes_in/TDLINE, ' '))" />
+
+<xsl:sequence select="substring($full_text, 1, 70)"/>
+
+
+every $node in $nodes_in/* satisfies (
+normalize-space($node) != '' and
+not(matches(normalize-space($node), '^0+(\.0+)?$'))
+)
+
+
+$nodes_in/QUALF = '015' and ($nodes_in[QUALF='015']/NTANF!='' and $nodes_in[QUALF='015']/NTANZ!='' ) and not(matches(string-join($nodes_in[QUALF='015']/NTANF,' '),'^\s*0+(\.0+)?\s*$'))
+
+(: The content below is only a placeholder and can be replaced. :)
+(: It allows node creation if at least one of the conditional nodes exists. :)
+($nodes_in/VOLUM!='' and not(matches($nodes_in/VOLUM,'^\s*0+(\.0+)?\s*$'))) or $nodes_in/VOLEH!='' and not(matches($nodes_in/VOLEH,'^\s*0+(\.0+)?\s*$'))
