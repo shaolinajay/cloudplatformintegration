@@ -1,0 +1,165 @@
+Absolute Location Path
+An absolute location path begins with a '/' to signify that it is starting from the document root. 
+The document root is the top level of the XML document's node hierarchy and contains all other nodes in the XML document,
+ including the root element (which is the top level of the XML document's element hierarchy).
+
+
+Node
+//ORDID
+
+NodeList
+//ORDID
+
+Node
+/root/Order[2]/ORDID
+
+Node
+/root/Order[MATID='M100']
+
+Nodelist
+/root/Order[MATID='M100']
+//MATID[.='M100']
+
+Nodelist
+/root/Order[MATID='M100' and PRICE > 500]
+
+Nodelist
+/root/Order/MATID[text()='M100']
+
+Nodelist
+//@type
+//MATID[@type]
+
+//Order[PRICE > 200]
+//Order/PRICE[text()>200]
+
+
+
+Relative Location Path
+A relative location path is always evaluated from a context node.
+A context node can be thought of as the node that the XPath processor is 'currently processing'.
+example1
+//MATID[.='M100']
+
+example2
+('<MaterialList>', //Order!
+  ('<Order>', 
+      MATID!('<MATID>'||.||'</MATID>'),
+      DELDAT!('<YEAR>'||substring(.,7,4)||'</YEAR>'),
+  '</Order>'),
+'</MaterialList>'
+) => string-join()
+
+
+
+
+String
+string-join(//MATID,',')
+
+
+Sequences
+Sequences are very important in XPath because every XPath expression returns a sequence.
+ A sequence is simply an ordered collection of zero or more items.
+(4, 8, 75, 16, 2)
+
+(1,2,3)=>for-each(function($a){$a*$a})=>string-join(',')
+(//PRICE)=>for-each(function($a){$a*$a})=>string-join(',')
+
+String
+(for $i in /root/Order/ORDID return 'Order No:' || $i ) 
+(for $i in /root/Order/ORDID return 'Order No:' || $i ) => string-join()
+
+
+Inline UDF
+filter(/root/Order/MATID,function($a){$a='M100'})
+
+(//PRICE),(//ORDQTY)=>for-each(function($a,$b){$a*b})=>string-join(',')
+90000,40000,22500,90000,62500,22500,90000,40000,40000,90000,90000,90000
+
+NodeList
+sort(/root/Order)
+
+String
+count(//ORDID)
+sum(//ORDQTY)
+
+Concat Operator
+concat('hello', ' world')
+'hello' || ' world'
+//NAME[contains(.,'Apple')] =>string-join(',')
+
+regex
+/root/Order[ matches(ORDID, '\d+6$')]
+Matches orders with numbers and ending with 6. 
+/root/Order[ matches(ORDID, '[0-9]{5}|\d+6$')]
+Orders with 5 digits or orders ending with 6
+
+substring(/root/Order[1]/DELDAT,7,4)
+
+('<MaterialList>', //Order!
+  ('<Order>', 
+      MATID!('<MATID>'||upper-case(.)||'</MATID>'),
+      DELDAT!('<YEAR>'||substring(.,7,4)||'</YEAR>'),
+  '</Order>'),
+'</MaterialList>'
+) => string-join()
+
+substring-before(/root/Order[1]/DELDAT, '.')
+
+string-length(/root/Order[1]/DELDAT)
+
+//Order[PRICE = max(//Order/PRICE)]
+
+function:simple('${property.count}')
+
+//Order[PRICE >= function:simple('${property.count}')]
+
+(//PRICE) => for-each(function ($X) {$X* 2})=>string-join(',')
+for-each(//PRICE,function ($X) {$X* 2})=>string-join(',')
+
+filter(1 to 5, function($arg) {$arg mod 2 = 0})=>string-join(',')
+filter(//ORDQTY, function($arg) {$arg > 200})=>string-join(',')
+
+fold-left(1 to 5, 1, function($arg1, $arg2) {$arg1 * $arg2})=>string-join(',')
+(1 - (2 - (3 - (4 - (5 - 0)))))
+
+for-each-pair((1, 10, 100), (2, 5, 10), function($arg1, $arg2) {$arg1 * $arg2})
+2,50,1000
+
+string
+for-each-pair((//ORDQTY), (//PRICE), function($arg1, $arg2) {$arg1 * $arg2})=>string-join(',')
+
+Map operator
+The ''!' operator is similar to a 'for' expression. It allows us to process items in a sequence.
+
+for $i in //MATID return 'Product:' || $i
+(for $i in //MATID return 'Product:' || $i  ) => string-join(',')
+string-join(for $i in //MATID return 'Product:' || $i,',')
+
+('brother', 'sister', 'mum', 'dad') ! ('Hi ' || .)=>string-join(',')
+//MATID!('Product:' ||.)
+
+//MATID!('Product:' ||.)=>string-join(',')
+
+/root/Order!(ORDID,MATID)=>string-join(',')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
