@@ -1,0 +1,6 @@
+https://community.sap.com/t5/technology-blog-posts-by-members/beginners-guide-to-advanced-event-mesh/ba-p/14160854
+https://community.sap.com/t5/enterprise-resource-planning-blog-posts-by-members/sap-event-mesh-end-to-end-tutorial-with-cloud-platform-integration/ba-p/13576920
+http urls
+https://trailcfapps.eu10.hana.ondemand.com/api/v1/IntegrationPackages('${property.PID}')/IntegrationDesigntimeArtifacts
+https://trailcfapps.eu10.hana.ondemand.com/api/v1/MessageProcessingLogs('${property.f1}')/CustomHeaderProperties
+https://trailcfapps.eu10.hana.ondemand.com/api/v1/MessageProcessingLogs('${property.f1}')/ErrorInformation/$value
